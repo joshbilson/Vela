@@ -15,8 +15,17 @@ mkdir -p "$STATE_DIR/apks"
 run=$(( $(cat "$STATE_DIR/run" 2>/dev/null || echo 2999) + 1 ))
 name="0.5.$run"; code=$(( (2000 + run) * 10 ))
 
-[ "${1:-}" = "--test" ] && ./gradlew :core:test --no-daemon -q
-./gradlew :app:assembleRelease --no-daemon -PappVersionName="$name" -PappVersionCode="$code"
+# Gradle runs in its own capped unit in background.slice: inside t3code.service's cgroup the R8 +
+# lint peak tripped systemd-oomd, which then kills the whole t3code unit (2026-10-15).
+gradle() {
+  systemd-run --user --quiet --wait --pipe --collect --same-dir --slice=background.slice \
+    -p MemoryMax=14G -p MemorySwapMax=0 \
+    -E JAVA_HOME -E ANDROID_HOME -E ANDROID_SDK_ROOT -E PATH \
+    -E VELA_KEYSTORE_PATH -E VELA_KEYSTORE_PASSWORD -E VELA_KEY_ALIAS \
+    ./gradlew --no-daemon --max-workers=4 -Pkotlin.compiler.execution.strategy=in-process "$@"
+}
+[ "${1:-}" = "--test" ] && gradle :core:test -q
+gradle :app:assembleRelease -PappVersionName="$name" -PappVersionCode="$code"
 
 apk=$(ls -t app/build/outputs/apk/release/*.apk | head -1)
 "$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)/apksigner" verify --print-certs "$apk" \
