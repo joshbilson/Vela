@@ -47,10 +47,14 @@ object VelaLinks {
     const val PAINTED_ROADS = "paintedRoads"
 
     private val DEFAULTS: Map<String, String> = mapOf(
-        REPO to "https://github.com/PimpinPumpkin/Vela",
-        API to "https://api.github.com/repos/PimpinPumpkin/Vela",
+        // FORK (joshbilson/Vela, see FORK.md): the app's own code channels -- the repository, the
+        // updater/What's-new API and the signed settings file -- point at the fork. The open-data
+        // releases (map data, overlays, voices) and the Pages fonts stay on upstream: read-only
+        // public data, baked by upstream CI.
+        REPO to "https://github.com/joshbilson/Vela",
+        API to "https://api.github.com/repos/joshbilson/Vela",
         RELEASES to "https://github.com/PimpinPumpkin/Vela/releases/download",
-        RAW to "https://raw.githubusercontent.com/PimpinPumpkin/Vela/main",
+        RAW to "https://raw.githubusercontent.com/joshbilson/Vela/main",
         SITE to "https://velamaps.org",
         // The GitHub Pages address: the map fonts, the F-Droid repository and the docs. It is not
         // the website and must not become a redirect to it; installed apps and F-Droid clients

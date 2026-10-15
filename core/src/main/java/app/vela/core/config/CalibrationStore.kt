@@ -257,7 +257,11 @@ class CalibrationStore @Inject constructor(
         // EC P-256 public key (SPKI, base64) — the private half lives only in
         // ~/.vela-signing/vela-calibration.key, never in the repo. Embedding the
         // PUBLIC key is safe; it just lets the app reject bundles we didn't sign.
+        // FORK: the fork's own key (private half in ~/.vela-signing on oracle). Upstream's bundle is
+        // verified against upstream's key and re-signed by scripts/fork/sync-upstream.sh, so only
+        // the fork owner can push config, notices or transform JS to these builds.
+        // Upstream key: MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEuz8/zxOJFhVqKco74fkmzrLlyPra4/pTEUm7lmue/Kig0T497fcs+hjhZkaSqVZAwloNrr0+0ILi7yATmU+d3g==
         private const val PINNED_PUBLIC_KEY =
-            "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEuz8/zxOJFhVqKco74fkmzrLlyPra4/pTEUm7lmue/Kig0T497fcs+hjhZkaSqVZAwloNrr0+0ILi7yATmU+d3g=="
+            "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEOrVz98jOBvOXBC8m9X1HklH+RlTKtuLCtUOXKntBLjQZ+SnDPrUgzjV+weHW6rsc9agbBR3+nXu/FTCanDbrXw=="
     }
 }
