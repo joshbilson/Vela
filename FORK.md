@@ -42,7 +42,10 @@ counter (`~/.local/state/vela/run`) starts at 3000. Build log: `~/.local/state/v
 - **Obtainium**: add `https://github.com/joshbilson/Vela`. Tracks our Latest release.
 - Or download `vela-maps-all.apk` from the fork's releases. After that, the in-app updater
   (Settings → About) checks our releases.
-- Verify: `apksigner verify --print-certs vela-maps-all.apk` must show `CN=Vela Maps (Bilson build)`.
+- Verify: `apksigner verify --print-certs vela-maps-all.apk` must show `CN=Vela Maps (Bilson build)`,
+  SHA-256 `9dbac2bdbbd69d0ec7c9e449773c7bb81189913a5a005a705e095754f3ef851a`.
+- The build runs Gradle in a capped `systemd-run` unit (14 GB, background.slice): run inside
+  t3code's cgroup, its R8/lint peak tripped systemd-oomd, which kills the whole t3code unit.
 
 ## Not done / optional
 
